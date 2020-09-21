@@ -1,7 +1,7 @@
 # AspNetCore31JWT
 
 ## Token generation from controller
-##[HttpPost]
+        [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -32,4 +32,36 @@
                 });
             }
             return Unauthorized();
+        }
+        
+  ## Startup.cs
+  public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddMvc();
+            services.AddDbContext<ApplicationDbContext>(options=>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
+            services.AddIdentity<ApplicationUser,IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                { 
+                    ValidateIssuer=true,
+                    ValidateAudience=true,
+                    ValidAudience="https://localhost:44347/",
+                    ValidIssuer= "https://localhost:44347/",
+                    IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SecureKeyTestKeyHo"))
+                };
+            });
         }
