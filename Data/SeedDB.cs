@@ -16,11 +16,11 @@ namespace AspNetCore31JWT.Data
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    Email = "gopalkunwar@gmail.com",
+                    Email = "test@gmail.com",
                     SecurityStamp = Guid.NewGuid().ToString(),
-                    UserName = "gopalkunwar"
+                    UserName = "testuser"
                 };
-                userManager.CreateAsync(user, "#Tikapur$1985");
+                userManager.CreateAsync(user, "#1234$");
             }
         } 
     }
